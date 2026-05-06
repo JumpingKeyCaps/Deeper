@@ -1,5 +1,6 @@
 package com.lebaillyapp.deeper.cockpitUiKit.components.atomic.horizontalGauge
 
+import android.graphics.Paint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -111,6 +112,11 @@ fun HorizontalGauge(
     ledIsOn: Boolean = true,
     ledBlinkInterval: Int = 0
 ) {
+
+    // valeur de l'allumage de la gauge (mode eteind /allumer)
+    val offLightValue = 0.5f // alpha des lignes et graduations et text
+
+
     // --- Input Validation ---
     if (maxValue <= minValue) {
         Text(
@@ -242,13 +248,13 @@ fun HorizontalGauge(
 
                             // Déterminer la couleur de la graduation actuelle
                             val currentTickColor = when{
-                                i == 0 -> firstTickColor // Utiliser la couleur rouge pour la première (i=0)
-                                i == totalTicks -> lastTickColor // Utiliser la couleur verte pour la dernière (i=totalTicks)
+                                i == 0 -> firstTickColor  // Utiliser la couleur rouge pour la première (i=0)
+                                i == totalTicks -> lastTickColor // Utiliser la couleur  pour la dernière (i=totalTicks)
                                 else -> scaleColor
                             }
 
                             drawLine(
-                                color = currentTickColor, // Utiliser la couleur déterminée
+                                color = if(ledIsOn) currentTickColor else currentTickColor.copy(alpha = offLightValue),
                                 start = Offset(tickStartX, tickStartY), end = Offset(tickEndX, tickEndY),
                                 strokeWidth = if (isMajorTick) majorTickStrokeWidthPx else minorTickStrokeWidthPx
                             )
@@ -258,13 +264,12 @@ fun HorizontalGauge(
                                 val labelText = tickValue.roundToInt().toString()
                                 val labelX = pivot.x + cos(angleRad).toFloat() * labelRadius
                                 val labelY = pivot.y + sin(angleRad).toFloat() * labelRadius + (labelTextSizePx / 3f)
-                                // --- MODIFICATION ICI (Optionnel mais cohérent) ---
                                 // Changer aussi la couleur du label pour la 1ère/dernière graduation si désiré
 
                                 val currentLabelPaint = when{
-                                    i == 0 -> android.graphics.Paint(labelTextPaint).apply { color = firstTickColor.toArgb() }
-                                    i == totalTicks -> android.graphics.Paint(labelTextPaint).apply { color = lastTickColor.toArgb() }
-                                    else -> labelTextPaint
+                                    i == 0 -> Paint(labelTextPaint).apply { color = if(ledIsOn) firstTickColor.toArgb() else firstTickColor.copy(alpha = offLightValue).toArgb() }
+                                    i == totalTicks -> Paint(labelTextPaint).apply { color = if(ledIsOn) lastTickColor.toArgb() else lastTickColor.copy(alpha = offLightValue).toArgb() }
+                                    else -> labelTextPaint.apply { color = if(ledIsOn) scaleColor.toArgb() else scaleColor.copy(alpha = offLightValue).toArgb() }
                                 }
                                 drawIntoCanvas { c -> c.nativeCanvas.drawText(labelText, labelX, labelY, currentLabelPaint) }
                             }
@@ -280,7 +285,7 @@ fun HorizontalGauge(
                     val needleTipY = pivot.y + sin(needleAngleRad).toFloat() * needleLength
 
                     drawLine(
-                        color = needleColor, start = pivot, end = Offset(needleTipX, needleTipY),
+                        color = if(ledIsOn) needleColor else needleColor.copy(alpha = offLightValue), start = pivot, end = Offset(needleTipX, needleTipY),
                         strokeWidth = needleStrokeWidthPx, cap = needleCap
                     )
                 }
@@ -296,7 +301,7 @@ fun HorizontalGauge(
             // Regrouper les styles dans un TextStyle
             val titleStyle = LocalTextStyle.current.merge( // Fusionner avec le style local actuel si nécessaire
                 TextStyle(
-                    color = titleColor,
+                    color = if(ledIsOn) titleColor else titleColor.copy(alpha = offLightValue),
                     fontSize = titleTextSize,
                     fontFamily = titleFontFamily,
                     textAlign = TextAlign.Center // Mettre textAlign dans le TextStyle
@@ -304,7 +309,7 @@ fun HorizontalGauge(
             )
             val NumericValueStyle = LocalTextStyle.current.merge( // Fusionner avec le style local actuel si nécessaire
                 TextStyle(
-                    color = titleColor,
+                    color = if(ledIsOn) titleColor else titleColor.copy(alpha = offLightValue),
                     fontSize = valueTextSize,
                     fontFamily = titleFontFamily,
                     textAlign = TextAlign.Center // Mettre textAlign dans le TextStyle

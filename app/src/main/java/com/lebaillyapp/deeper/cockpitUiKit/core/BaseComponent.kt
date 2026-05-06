@@ -1,5 +1,9 @@
 package com.lebaillyapp.deeper.cockpitUiKit.core
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+
 /**
  * ## Implémentation de base d'un [ComponentNode] qui lie une configuration et un état.
  *
@@ -13,4 +17,15 @@ abstract class BaseComponent<C : ComponentConfig, S : ComponentState<*>>(
     override val id: String,
     val config: C,
     val state: S
-) : ComponentNode
+) : ComponentNode {
+
+    // Le moteur pour les animations et timers du composant
+    protected val componentScope: CoroutineScope = MainScope()
+
+    /**
+     * À appeler lors de la destruction du composant pour stopper les coroutines en cours.
+     */
+    open fun dispose() {
+        componentScope.cancel()
+    }
+}

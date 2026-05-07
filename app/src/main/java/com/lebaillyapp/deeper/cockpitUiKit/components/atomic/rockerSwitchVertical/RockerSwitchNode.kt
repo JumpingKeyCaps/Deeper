@@ -13,7 +13,8 @@ import com.lebaillyapp.deeper.cockpitUiKit.core.BaseComponent
 class RockerSwitchNode(
     override val id: String,
     config: RockerSwitchConfig,
-    state: RockerSwitchState = RockerSwitchState(RockerSwitchData())
+    state: RockerSwitchState = RockerSwitchState(RockerSwitchData()),
+    var onStateChanged: ((Boolean) -> Unit)? = null
 ) : BaseComponent<RockerSwitchConfig, RockerSwitchState>(id, config, state) {
 
     /**
@@ -23,9 +24,9 @@ class RockerSwitchNode(
      */
     fun toggle(forcedState: Boolean? = null) {
         if (!state.value.isEnabled) return
-
         val newState = forcedState ?: !state.value.isChecked
         state.update(state.value.copy(isChecked = newState))
+        onStateChanged?.invoke(newState)
     }
 
     @Composable
@@ -37,7 +38,6 @@ class RockerSwitchNode(
             modifier = modifier,
             isChecked = currentData.isChecked,
             onToggle = {
-                // Déclenchement du clic haptique (sensation mécanique)
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 toggle(it)
             },

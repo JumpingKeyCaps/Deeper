@@ -30,7 +30,7 @@ data class HorizontalGaugeConfig(
     val titleFontFamily: FontFamily? = null,
     val valueTextSize: TextUnit = 18.sp,
     // --- LED intégrée ---
-    val ledColor: Color = Color(0xFFFF9100),
+    val ledColor: Color = Color(0xFF00E676),
     val ledBlinkInterval: Int = 0,
     val warningThreshold: Float = 40f,  // Seuil pour passage à l'Orange
     val criticalThreshold: Float = 20f, // Seuil pour passage au Rouge

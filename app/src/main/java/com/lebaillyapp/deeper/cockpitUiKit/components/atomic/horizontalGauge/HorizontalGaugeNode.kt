@@ -40,7 +40,7 @@ class HorizontalGaugeNode(
     }
 
     private fun calculateColor(value: Float): Color {
-        val green = Color(0xFF00E676)
+        val green = config.ledColor
         val orange = Color(0xFFFF9100)
         val red = Color(0xFFFF1744)
 

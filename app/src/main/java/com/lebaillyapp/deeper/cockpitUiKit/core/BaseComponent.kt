@@ -15,7 +15,7 @@ import kotlinx.coroutines.cancel
  */
 abstract class BaseComponent<C : ComponentConfig, S : ComponentState<*>>(
     override val id: String,
-    val config: C,
+    var config: C,
     val state: S
 ) : ComponentNode {
 

@@ -138,7 +138,7 @@ fun GlassButton(
             fontFamily = FontFamily(Font(R.font.micro_regular)),
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .alpha(if (isOn) 1f else 0.8f)
+                .alpha(if (isOn) 1f else 0.2f)
         )
     }
 }

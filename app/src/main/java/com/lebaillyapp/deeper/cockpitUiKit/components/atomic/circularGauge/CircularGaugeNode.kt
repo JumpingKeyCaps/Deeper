@@ -43,7 +43,6 @@ class CircularGaugeNode(
      * Logique de couleur basée sur la valeur physique.
      */
     private fun calculateColor(value: Float): Color {
-        // Ici on pourrait injecter une logique de seuils si nécessaire
         return config.primaryColorParam
     }
 

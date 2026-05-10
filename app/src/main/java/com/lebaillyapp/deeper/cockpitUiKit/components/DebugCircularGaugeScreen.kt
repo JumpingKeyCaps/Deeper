@@ -34,43 +34,9 @@ fun DebugCircularGaugeScreen() {
         // Le Node Composite final
         PowerLoadNode(
             id = "pwr_module_01",
-            config = PowerLoadConfig(titleParam = "PWR-LOAD", maxCapacity = 100f),
-            state = PowerLoadState(
-                initialLoad = 0f,
-                gaugeNode = CircularGaugeNode(
-                    id = "debug_pwr_gauge",
-                    config = CircularGaugeConfig(
-                        titleParam = "AMP",
-                        maxValue = 100f,
-                        majorTickInterval = 20f ,
-                        titleTextSize = 10.sp,
-                        labelTextSize = 7.sp,
-                        valueTextSize = 15.sp,
-                        titleBottomMarging = 25.dp,
-                        titleFontFamily = microFont,
-                        animationDurationMillis = 2000
-                    )
-                ),
-                statusLedNode = LedNode(
-                    id = "debug_pwr_led",
-                    config = LedConfig(
-                        titleParam = "STATUS",
-                        colorParam = Color.Green,
-                        size = 10f,
-                        haloSpacer = 4)
-                ),
-                overloadVoyantNode = GlassButtonNode(
-                    id = "debug_pwr_ovl",
-                    config = GlassButtonConfig(
-                        titleParam = "OVERLOAD",
-                        colorParam = Color(0xFFD00831),
-                        textColor = Color.White,
-                        textSize = 12.sp,
-                        cornerRadius = 3.dp,
-                        glowRadius = 2.0f
-                    )
-                )
-            )
+            config = PowerLoadConfig(
+                moduleLabel = "PWR-LOAD",
+            ),
         )
     }
 

@@ -2,56 +2,84 @@ package com.lebaillyapp.deeper.cockpitUiKit.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Slider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.lebaillyapp.deeper.cockpitUiKit.components.atomic.dualTapeAltimeter.DualTapeAltimeterConfig
-import com.lebaillyapp.deeper.cockpitUiKit.components.atomic.dualTapeAltimeter.DualTapeAltimeterNode
-import kotlinx.coroutines.delay
+import com.lebaillyapp.deeper.R
+import com.lebaillyapp.deeper.cockpitUiKit.components.atomic.rockerSwitchVertical.RockerSwitchConfig
+import com.lebaillyapp.deeper.cockpitUiKit.components.atomic.segmentedBargraph.SegmentedBargraphConfig
+import com.lebaillyapp.deeper.cockpitUiKit.components.composite.extended.batterySlotDisplay.BatterySlotConfig
+import com.lebaillyapp.deeper.cockpitUiKit.components.composite.extended.batterySlotDisplay.BatterySlotNode
+import com.lebaillyapp.deeper.cockpitUiKit.components.composite.extended.multi7SegDisplay.Multi7SegConfig
 
 @Composable
 fun DebugComponentScreen() {
-    val depthNode = remember {
-        DualTapeAltimeterNode(
-            id = "DEPTH_INDICATOR",
-            config = DualTapeAltimeterConfig(
-                titleParam = "DEPTH",
-                minAltitude = -30000f,
-                maxAltitude = 0f,
-                majorTickEvery = 10,
-                minorTickEvery = 2,
-                centerFontSize = 30f,
-                recordDepthParam = -124.7f // On place un record à -100m
+    // --- 1. ÉTAT DE SIMULATION ---
+    var testLevel by remember { mutableFloatStateOf(95f) }
+
+    // --- 2. INSTANCIATION DES 4 NODES ---
+    // On utilise un remember sur une liste pour garder nos instances
+    val batteryRack = remember {
+        List(4) { index ->
+            BatterySlotNode(
+                id = "BAT_0${index + 1}",
+                config = BatterySlotConfig(
+                    slotLabel = "BAT-${index + 1}",
+                    rockerConfig = RockerSwitchConfig(
+                        iconSource = { painterResource(id = R.drawable.eclaire) },
+                        width = 30.dp,
+                        height = 60.dp
+                    )
+                ),
+                onPowerToggled = { isConnected ->
+                    println("Rack Slot ${index + 1} is ${if (isConnected) "ONLINE" else "OFFLINE"}")
+                }
             )
-        )
-    }
-
-    var simuDepth by remember { mutableStateOf(0f) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(16)
-            simuDepth += 0.5f // Descente
-
-            val finalValue = if (simuDepth == 0f) 0f else -simuDepth
-            depthNode.updateAltitude(finalValue)
-
-            // Si on dépasse -20000, on reset pour le test
-            if (simuDepth > 1250f) simuDepth = 0f
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(Color.Black),
-        contentAlignment = Alignment.Center
+    // --- 3. MISE À JOUR DE LA DATA (Global Sync) ---
+    LaunchedEffect(testLevel) {
+        batteryRack.forEach { it.setLevel(testLevel) }
+    }
+
+    // --- 4. RENDU ---
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF0B0D13))
+            .padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        depthNode.Render(
+        // AFFICHAGE DU RACK
+        Row(
             modifier = Modifier
-                .width(180.dp)
-                .height(220.dp)
-                .padding(3.dp)
+                .wrapContentSize()
+                .padding(10.dp)
+                .graphicsLayer(rotationX = -0f, rotationY = -0f, scaleX = 0.8f, scaleY = 0.8f),
+            horizontalArrangement = Arrangement.spacedBy(2.dp) // Espacement entre les tranches
+        ) {
+            batteryRack.forEach { node ->
+                node.Render(Modifier)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(250.dp))
+
+        // CONTRÔLE DE DEBUG (Pour tester la synchro et le 1% minimum)
+        Slider(
+            value = testLevel,
+            onValueChange = { testLevel = it },
+            valueRange = 0f..100f,
+            modifier = Modifier.width(150.dp)
         )
+
+
     }
 }

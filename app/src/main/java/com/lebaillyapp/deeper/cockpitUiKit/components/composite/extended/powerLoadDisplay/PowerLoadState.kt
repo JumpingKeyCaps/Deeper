@@ -24,7 +24,7 @@ class PowerLoadState(
      * Met à jour l'affichage complet du module.
      */
     fun update(loadValue: Float, systemIsOn: Boolean, batteryMaxAmpCapacity: Float) {
-        this.value = loadValue
+        this.update(loadValue)
 
         var alimentationEffective = systemIsOn
 

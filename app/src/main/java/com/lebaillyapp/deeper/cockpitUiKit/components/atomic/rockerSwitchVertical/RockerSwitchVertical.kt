@@ -47,6 +47,7 @@ fun RockerSwitchVertical( // Renommé pour indiquer une nouvelle itération
     height: Dp = 70.dp,
     cornerRadius: Dp = 8.dp,
     animationDuration: Int = 200,
+    ledColor: Color,
     iconSource: Painter
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -167,7 +168,7 @@ fun RockerSwitchVertical( // Renommé pour indiquer une nouvelle itération
                     painter = iconSource,
                     contentDescription = "On",
                     tint = topMarkingColor,
-                    modifier = Modifier.size(width * 0.4f)
+                    modifier = Modifier.size(width * 0.3f)
                 )
             }
 
@@ -206,7 +207,7 @@ fun RockerSwitchVertical( // Renommé pour indiquer une nouvelle itération
             ) {
                 RealisticLED(
                     isOn = isChecked,
-                    color = Color(0xFFAB0020),
+                    color = ledColor,
                     size = 10.0f,
                     haloSpacer = 3,
                     blinkInterval = 0

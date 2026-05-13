@@ -37,6 +37,7 @@ class RockerSwitchNode(
         RockerSwitchVertical(
             modifier = modifier,
             isChecked = currentData.isChecked,
+            ledColor = config.ledColor,
             onToggle = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 toggle(it)

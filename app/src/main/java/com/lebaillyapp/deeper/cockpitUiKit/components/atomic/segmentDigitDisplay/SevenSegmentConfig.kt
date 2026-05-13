@@ -37,6 +37,6 @@ data class SevenSegmentConfig(
     val glowRadius: Float = 15f,
     val flickerAmplitude: Float = 0.25f,
     val flickerFrequency: Float = 1f,
-    val idleMode: Boolean = false,
+    var idleMode: Boolean = false,
     val idleSpeed: Long = 100
 ) : ComponentConfig(titleParam, onColor)

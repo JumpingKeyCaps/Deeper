@@ -1,13 +1,13 @@
-package com.lebaillyapp.deeper.cockpitUiKit.components
+package com.lebaillyapp.deeper.cockpitUiKit.components.composite.extended.oxygenTankSlot
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -18,8 +18,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lebaillyapp.deeper.cockpitUiKit.components.composite.extended.oxygenTankSlot.OxygenTankConfig
-import com.lebaillyapp.deeper.cockpitUiKit.components.composite.extended.oxygenTankSlot.OxygenTankNode
 
 @Composable
 fun DebugOxygenTankScreen() {
@@ -43,7 +41,8 @@ fun DebugOxygenTankScreen() {
                     tankLabel = "TANK-$label",
                     maxCapacityLiters = cap,
                     flowRatePerSecond = flow,
-                    scope = scope
+                    scope = scope,
+                    isInverted = label.toInt() % 2 == 0
                 ),
                 onOxygenInjected = { amount -> mainReservoirLiters += amount }
             )
@@ -117,12 +116,12 @@ fun DebugOxygenTankScreen() {
 
                 // EMERGENCY REFILL
                 Text("EMERGENCY REFILL (ALL TANKS)", color = Color.Gray, fontSize = 12.sp)
-                androidx.compose.material3.Button(
+                Button(
                     onClick = {
                         tankNodes.forEach { it.fillTank(it.config.maxCapacityLiters) }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1E2129)
                     )
                 ) {

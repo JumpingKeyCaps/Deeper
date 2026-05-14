@@ -54,7 +54,8 @@ class OxygenTankNode(
         OxygenTankDisplay(
             modifier = modifier,
             label = config.tankLabel,
-            state = state
+            state = state,
+            isInverted = config.isInverted
         )
     }
 

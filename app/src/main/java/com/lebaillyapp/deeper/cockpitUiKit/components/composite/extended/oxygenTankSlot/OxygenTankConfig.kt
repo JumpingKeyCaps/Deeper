@@ -42,5 +42,6 @@ data class OxygenTankConfig(
         barCornerRadius = 1.dp
     ),
     val backgroundColor: Color = Color(0xFF1A1A1A),
-    val scope: CoroutineScope
+    val scope: CoroutineScope,
+    val isInverted: Boolean = false
 ) : ComponentConfig(tankLabel, backgroundColor)
